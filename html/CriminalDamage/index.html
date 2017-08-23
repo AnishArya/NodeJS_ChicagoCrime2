@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+.axis text {
+    font: 10px sans-serif;
+}
+.axis line,
+.axis path {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+.axis--x path {
+    display: none;
+}
+.path-line {
+    fill: none;
+    stroke: yellow;
+    stroke-width: 1.5px;
+}
+svg {
+    background: #f0f0f0;
+}
+</style>
+<body>
+    <a href="https://github.com/AnishArya/" target = "_blank">
+    <img style="position:fixed;top:0;right:0;border:0;z-index:2;" width="149" height="149" src="../../images/forkme.png" alt="Fork me on GitHub"></a>
+        <!-- load the d3.js library -->
+        <p style="color: orange"><button disabled style="background-color: orange;"> &nbsp; </button>To Property</p>
+        <p style="color: lightblue"><button disabled style="background-color: lightblue;"> &nbsp; </button>To Vehicle</p>
+        <p style="color: blue"><button disabled style="background-color: blue;"> &nbsp; </button>To State Sup Prop</p>
+    <div id='stacked-bar'></div>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script>
+    var initStackedBarChart = {
+        draw: function(config) {
+            me = this,
+                domEle = config.element,
+                stackKey = config.key,
+                data = config.data,
+                margin = { top: 20, right: 20, bottom: 30, left: 50 },
+                parseyear = d3.timeParse("%m/%Y"),
+                width = 960 - margin.left - margin.right,
+                height = 500 - margin.top - margin.bottom,
+                xScale = d3.scaleBand().range([0, width]).padding(0.1),
+                yScale = d3.scaleLinear().range([height, 0]),
+                color = d3.scaleOrdinal(d3.schemeCategory20),
+                xAxis = d3.axisBottom(xScale),
+                yAxis = d3.axisLeft(yScale),
+                svg = d3.select("#" + domEle).append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+            var stack = d3.stack()
+                .keys(stackKey)
+                .order(d3.stackOrderNone)
+                .offset(d3.stackOffsetNone);
+            var layers = stack(data);
+            xScale.domain(data.map(function(d) { return (d.year); }));
+            yScale.domain([0, d3.max(layers[layers.length - 1], function(d) { return d[0] + d[1]; })]).nice();
+            var layer = svg.selectAll(".layer")
+                .data(layers)
+                .enter().append("g")
+                .attr("class", "layer")
+                .style("fill", function(d, i) { return color(i); });
+            layer.selectAll("rect")
+                .data(function(d) { return d; })
+                .enter().append("rect")
+                .attr("x", function(d) { return xScale(d.data.year); })
+                .attr("y", function(d) { return yScale(d[1]); })
+                .attr("height", function(d) { return yScale(d[0]) - yScale(d[1]); })
+                .attr("width", xScale.bandwidth());
+            svg.append("g")
+                .attr("class", "axis axis--x")
+                .attr("transform", "translate(0," + (height + 5) + ")")
+                .call(xAxis);
+            svg.append("g")
+                .attr("class", "axis axis--y")
+                .attr("transform", "translate(0,0)")
+                .call(yAxis);
+        }
+    }
+    var key = ["toStateSupProperty", "toVehicle", "toProperty"];
+    var data1 = d3.json("../../json/stackedBar.json", function(error, jsonData) {
+        if (error) throw error;
+        // trigger render
+        data1 = jsonData;
+        initStackedBarChart.draw({
+            data: jsonData,
+            key: key,
+            element: 'stacked-bar'
+        });
+    });
+    </script>

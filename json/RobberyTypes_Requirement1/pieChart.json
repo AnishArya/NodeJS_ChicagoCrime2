@@ -1,0 +1,34 @@
+[
+  {
+    "Type": "ARMED OTHER DANGEROUS WEAPON",
+    "DATA": 0
+  },
+  {
+    "Type": "STRONGARM- NO WEAPON",
+    "DATA": 79718
+  },
+  {
+    "Type": "AGGRAVATED VEHICULAR HIJACKING",
+    "DATA": 8104
+  },
+  {
+    "Type": "ARMED: HANDGUN",
+    "DATA": 79371
+  },
+  {
+    "Type": "ATTEMPT: ARMED OTHER FIREARM",
+    "DATA": 0
+  },
+  {
+    "Type": "ARMED: KNIFE/CUTTING INSTRUMENT",
+    "DATA": 0
+  },
+  {
+    "Type": "VEHICULAR HIJACKING",
+    "DATA": 4210
+  },
+  {
+    "Type": "AGGRAVATED",
+    "DATA": 11072
+  }
+]
